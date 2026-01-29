@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Post Generator Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;700&family=Roboto:wght@400;700&family=Lora:wght@400;700&family=Open+Sans:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .input-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .input-panel h1 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        .input-panel p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .color-row {
+            display: grid;
+            grid-template-columns: 1fr 60px;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="color"] {
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .icon-option {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .icon-option:hover {
+            border-color: #667eea;
+            background: #f3f4f6;
+        }
+
+        .icon-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .icon-option input[type="checkbox"]:checked+.icon-label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .icon-label {
+            font-size: 13px;
+            color: #333;
+            user-select: none;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-tertiary {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-tertiary:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .template-card {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: #667eea;
+            background: #f3f4f6;
+        }
+
+        .template-card.active {
+            border-color: #667eea;
+            background: #ede9fe;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .template-desc {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .preview-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .preview-header h2 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .size-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .size-btn {
+            padding: 8px 12px;
+            background: #f3f4f6;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .size-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        #canvas {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .history-btn {
+            padding: 8px 16px;
+            background: #6b7280;
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .history-btn:hover {
+            background: #4b5563;
+        }
+
+        .history-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        small {
+            font-size: 11px;
+            color: #666;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 10px;
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .file-upload-label:hover {
+            border-color: #667eea;
+            background: #ede9fe;
+            color: #667eea;
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: #10b981;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .saved-templates {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f9fafb;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .saved-template-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .saved-template-item button {
+            padding: 4px 8px;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="input-panel">
+            <h1>LinkedIn Post Generator Pro</h1>
+            <p>Create professional LinkedIn post images with advanced features</p>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('content')">Content</button>
+                <button class="tab" onclick="switchTab('design')">Design</button>
+                <button class="tab" onclick="switchTab('icons')">Icons</button>
+                <button class="tab" onclick="switchTab('templates')">Templates</button>
+            </div>
+
+            <!-- Content Tab -->
+            <div id="content" class="tab-content active">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" placeholder="e.g., Mental Health Matters"
+                        value="Mental Health Matters">
+                </div>
+
+                <div class="form-group">
+                    <label for="mainText">Main Text</label>
+                    <textarea id="mainText"
+                        placeholder="Enter your main content here...">Let's break the stigma around mental health. It's okay to not be okay. Seeking help is a sign of strength, not weakness. Remember to check in on yourself and others. Your mental well-being is just as important as your physical health. Together, we can create a supportive community where everyone feels heard and valued.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="sideText">Side Text</label>
+                    <input type="text" id="sideText" placeholder="e.g., BREAK THE SILENCE" value="BREAK THE SILENCE">
+                </div>
+
+                <div class="form-group">
+                    <label for="textAlign">Text Alignment</label>
+                    <select id="textAlign">
+                        <option value="center">Center</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Design Tab -->
+            <div id="design" class="tab-content">
+                <div class="form-group">
+                    <label for="fontFamily">Font Family</label>
+                    <select id="fontFamily">
+                        <option value="IM Fell English SC">IM Fell English SC</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Lora">Lora</option>
+                        <option value="Open Sans">Open Sans</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Arial">Arial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Background Color</label>
+                    <div class="color-row">
+                        <input type="text" id="bgColorText" value="#4A6B8A">
+                        <input type="color" id="bgColor" value="#4A6B8A">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sidebar Color</label>
+                    <div class="color-row">
+                        <input type="text" id="sidebarColorText" value="#B8935E">
+                        <input type="color" id="sidebarColor" value="#B8935E">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Title Color</label>
+                    <div class="color-row">
+                        <input type="text" id="titleColorText" value="#B8935E">
+                        <input type="color" id="titleColor" value="#B8935E">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Text Color</label>
+                    <div class="color-row">
+                        <input type="text" id="textColorText" value="#FFFFFF">
+                        <input type="color" id="textColor" value="#FFFFFF">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Icon Color</label>
+                    <div class="color-row">
+                        <input type="text" id="iconColorText" value="#FFFFFF">
+                        <input type="color" id="iconColor" value="#FFFFFF">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="textShadow">Text Shadow</label>
+                    <select id="textShadow">
+                        <option value="none">None</option>
+                        <option value="light">Light Shadow</option>
+                        <option value="medium">Medium Shadow</option>
+                        <option value="heavy">Heavy Shadow</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Logo</label>
+                    <div class="file-upload">
+                        <input type="file" id="logoUpload" accept="image/*" onchange="handleLogoUpload(event)">
+                        <label for="logoUpload" class="file-upload-label">
+                            📁 Click to upload logo
+                        </label>
+                    </div>
+                    <div id="logoFileName" class="file-name"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Background Image</label>
+                    <div class="file-upload">
+                        <input type="file" id="bgImageUpload" accept="image/*" onchange="handleBgImageUpload(event)">
+                        <label for="bgImageUpload" class="file-upload-label">
+                            🖼️ Click to upload background
+                        </label>
+                    </div>
+                    <div id="bgFileName" class="file-name"></div>
+                    <small>Background will have an overlay for text readability</small>
+                </div>
+            </div>
+
+            <!-- Icons Tab -->
+            <div id="icons" class="tab-content">
+                <div class="form-group">
+                    <label>Bottom Icons (Select up to 4)</label>
+                    <div class="icon-grid">
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="briefcase">
+                            <span class="icon-label">💼 Briefcase</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="target" checked>
+                            <span class="icon-label">🎯 Target</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="chart" checked>
+                            <span class="icon-label">📊 Chart</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="team" checked>
+                            <span class="icon-label">👥 Team</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="lightbulb" checked>
+                            <span class="icon-label">💡 Ideas</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="rocket">
+                            <span class="icon-label">🚀 Rocket</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="handshake">
+                            <span class="icon-label">🤝 Handshake</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="trophy">
+                            <span class="icon-label">🏆 Trophy</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="gear">
+                            <span class="icon-label">⚙️ Gear</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="star">
+                            <span class="icon-label">⭐ Star</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="graduation">
+                            <span class="icon-label">🎓 Education</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="growth">
+                            <span class="icon-label">📈 Growth</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="clock">
+                            <span class="icon-label">⏰ Time</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="laptop">
+                            <span class="icon-label">💻 Tech</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="location">
+                            <span class="icon-label">📍 Location</span>
+                        </label>
+                        <label class="icon-option">
+                            <input type="checkbox" name="icon" value="certificate">
+                            <span class="icon-label">📜 Certificate</span>
+                        </label>
+                    </div>
+                    <small>Maximum 4 icons allowed</small>
+                </div>
+            </div>
+
+            <!-- Templates Tab -->
+            <div id="templates" class="tab-content">
+                <div class="form-group">
+                    <label>Quick Templates</label>
+                    <div class="template-grid">
+                        <div class="template-card" onclick="loadTemplate('default')">
+                            <div class="template-name">Default</div>
+                            <div class="template-desc">Blue & Gold Classic</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('modern')">
+                            <div class="template-name">Modern</div>
+                            <div class="template-desc">Purple & Pink</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('professional')">
+                            <div class="template-name">Professional</div>
+                            <div class="template-desc">Navy & Silver</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('creative')">
+                            <div class="template-name">Creative</div>
+                            <div class="template-desc">Teal & Orange</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('minimal')">
+                            <div class="template-name">Minimal</div>
+                            <div class="template-desc">Black & White</div>
+                        </div>
+                        <div class="template-card" onclick="loadTemplate('vibrant')">
+                            <div class="template-name">Vibrant</div>
+                            <div class="template-desc">Red & Yellow</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Save Current Design</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="templateName" placeholder="Template name...">
+                        <button class="btn-tertiary" onclick="saveTemplate()" style="white-space: nowrap;">Save</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Saved Templates</label>
+                    <div id="savedTemplatesList" class="saved-templates">
+                        <div style="text-align: center; color: #999; padding: 20px; font-size: 13px;">
+                            No saved templates yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-generate" onclick="generateImage()">🎨 Generate Image</button>
+                <button class="btn-secondary" id="downloadBtn" onclick="downloadImage()" disabled>💾 Download
+                    PNG</button>
+                <button class="btn-secondary" id="downloadJpgBtn" onclick="downloadImage('jpg')" disabled>💾 Download
+                    JPG</button>
+                <button class="btn-tertiary" id="downloadPdfBtn" onclick="downloadPDF()" disabled>📄 Download
+                    PDF</button>
+                <button class="btn-tertiary" onclick="clearAll()">🗑️ Clear All</button>
+            </div>
+
+            <div class="history-buttons">
+                <button class="history-btn" id="undoBtn" onclick="undo()" disabled>↶ Undo</button>
+                <button class="history-btn" id="redoBtn" onclick="redo()" disabled>↷ Redo</button>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="preview-header">
+                <h2>Preview</h2>
+                <div class="size-selector">
+                    <button class="size-btn active" onclick="changeSize('linkedin')">LinkedIn</button>
+                    <button class="size-btn" onclick="changeSize('instagram')">Instagram</button>
+                    <button class="size-btn" onclick="changeSize('story')">Story</button>
+                </div>
+            </div>
+            <canvas id="canvas" width="800" height="1000"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadJpgBtn = document.getElementById('downloadJpgBtn');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+        let history = [];
+        let historyIndex = -1;
+        let logoImage = null;
+        let bgImage = null;
+        let currentSize = 'linkedin';
+
+        const sizes = {
+            linkedin: { width: 800, height: 1000 },
+            instagram: { width: 1080, height: 1080 },
+            story: { width: 1080, height: 1920 }
+        };
+
+        // Sync color inputs
+        ['bg', 'sidebar', 'title', 'text', 'icon'].forEach(type => {
+            const colorInput = document.getElementById(`${type}Color`);
+            const textInput = document.getElementById(`${type}ColorText`);
+
+            colorInput.addEventListener('input', (e) => {
+                textInput.value = e.target.value;
+            });
+
+            textInput.addEventListener('input', (e) => {
+                if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                    colorInput.value = e.target.value;
+                }
+            });
+        });
+
+        // Limit icon selection to 4
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox' && e.target.name === 'icon') {
+                const checkedBoxes = document.querySelectorAll('input[name="icon"]:checked');
+                if (checkedBoxes.length > 4) {
+                    e.target.checked = false;
+                    alert('Maximum 4 icons allowed');
+                }
+            }
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function changeSize(size) {
+            currentSize = size;
+            canvas.width = sizes[size].width;
+            canvas.height = sizes[size].height;
+
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            generateImage();
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('logoFileName').textContent = `✓ ${file.name}`;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        logoImage = img;
+                        generateImage();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleBgImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('bgFileName').textContent = `✓ ${file.name}`;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        bgImage = img;
+                        generateImage();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function wrapText(text, maxWidth, fontSize, fontFamily) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            ctx.font = `${fontSize}px "${fontFamily}", Georgia, serif`;
+
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = ctx.measureText(currentLine + " " + word).width;
+                if (width < maxWidth) {
+                    currentLine += " " + word;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        function generateImage() {
+            const title = document.getElementById('title').value || 'Your Title Here';
+            const mainText = document.getElementById('mainText').value || 'Your main text here...';
+            const sideText = document.getElementById('sideText').value || 'SIDE TEXT';
+            const fontFamily = document.getElementById('fontFamily').value;
+            const bgColor = document.getElementById('bgColor').value;
+            const sidebarColor = document.getElementById('sidebarColor').value;
+            const titleColor = document.getElementById('titleColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const textAlign = document.getElementById('textAlign').value;
+            const textShadow = document.getElementById('textShadow').value;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Calculate responsive sizes
+            const scale = canvas.width / 800;
+            const mainWidth = canvas.width * 0.77;
+            const sidebarWidth = canvas.width * 0.23;
+            const titleSize = Math.floor(42 * scale);
+            const mainTextSize = Math.floor(32 * scale);
+            const sideTextSize = Math.floor(52 * scale);
+
+            // Draw background image or color
+            if (bgImage) {
+                ctx.drawImage(bgImage, 0, 0, mainWidth, canvas.height);
+                ctx.fillStyle = bgColor + '99'; // Add transparency
+                ctx.fillRect(0, 0, mainWidth, canvas.height);
+            } else {
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, mainWidth, canvas.height);
+            }
+
+            // Draw sidebar
+            ctx.fillStyle = sidebarColor;
+            ctx.fillRect(mainWidth, 0, sidebarWidth, canvas.height);
+
+            // Calculate total content height
+            const titleLines = wrapText(title, mainWidth * 0.85, titleSize, fontFamily);
+            const mainLines = wrapText(mainText, mainWidth * 0.85, mainTextSize, fontFamily);
+
+            const titleHeight = titleLines.length * titleSize * 1.2;
+            const mainHeight = mainLines.length * mainTextSize * 1.3;
+            const spacing = 30 * scale;
+            const iconSpace = 150 * scale;
+
+            const totalContentHeight = titleHeight + spacing + mainHeight;
+            const availableHeight = canvas.height - iconSpace;
+
+            let yPosition = (availableHeight - totalContentHeight) / 2 + titleSize;
+
+            // Apply text shadow
+            if (textShadow !== 'none') {
+                const shadowBlur = textShadow === 'light' ? 5 : textShadow === 'medium' ? 10 : 15;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = shadowBlur;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+            }
+
+            // Draw title
+            ctx.fillStyle = titleColor;
+            ctx.font = `bold ${titleSize}px "${fontFamily}", Georgia, serif`;
+            ctx.textAlign = textAlign;
+
+            const xPosition = textAlign === 'center' ? mainWidth / 2 :
+                textAlign === 'left' ? mainWidth * 0.08 :
+                    mainWidth * 0.92;
+
+            titleLines.forEach(line => {
+                ctx.fillText(line, xPosition, yPosition);
+                yPosition += titleSize * 1.2;
+            });
+
+            // Draw main text
+            ctx.fillStyle = textColor;
+            ctx.font = `${mainTextSize}px "${fontFamily}", Georgia, serif`;
+
+            yPosition += spacing;
+
+            mainLines.forEach(line => {
+                ctx.fillText(line, xPosition, yPosition);
+                yPosition += mainTextSize * 1.3;
+            });
+
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // Draw side text (rotated)
+            ctx.save();
+            ctx.translate(mainWidth + sidebarWidth / 2, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${sideTextSize}px "${fontFamily}", Georgia, serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText(sideText, 0, 0);
+            ctx.restore();
+
+            // Draw selected icons at bottom
+            const selectedIcons = Array.from(document.querySelectorAll('input[name="icon"]:checked'))
+                .map(cb => cb.value);
+
+            if (selectedIcons.length > 0) {
+                const iconY = canvas.height - (100 * scale);
+                const spacing = mainWidth / (selectedIcons.length + 1);
+
+                selectedIcons.forEach((iconType, index) => {
+                    const x = spacing * (index + 1);
+                    drawIcon(iconType, x, iconY, scale);
+                });
+            }
+
+            // Draw logo if uploaded
+            if (logoImage) {
+                const logoSize = 80 * scale;
+                const logoX = mainWidth - logoSize - (20 * scale);
+                const logoY = 20 * scale;
+                ctx.drawImage(logoImage, logoX, logoY, logoSize, logoSize);
+            }
+
+            // Enable download buttons
+            downloadBtn.disabled = false;
+            downloadJpgBtn.disabled = false;
+            downloadPdfBtn.disabled = false;
+
+            // Save to history
+            saveToHistory();
+        }
+
+        function drawIcon(type, x, y, scale) {
+            const size = 60 * scale;
+            const iconColor = document.getElementById('iconColor').value;
+            const altColor = document.getElementById('sidebarColor').value;
+
+            ctx.lineWidth = 3 * scale;
+
+            switch (type) {
+                case 'briefcase':
+                    ctx.strokeStyle = iconColor;
+                    ctx.strokeRect(x - size / 2, y + 15 * scale, size, size - 20 * scale);
+                    ctx.fillStyle = iconColor;
+                    ctx.fillRect(x - size / 2 + 15 * scale, y, 30 * scale, 20 * scale);
+                    ctx.strokeRect(x - size / 2 + 15 * scale, y, 30 * scale, 20 * scale);
+                    break;
+
+                case 'target':
+                    ctx.strokeStyle = altColor;
+                    ctx.beginPath();
+                    ctx.arc(x, y + size / 2, 25 * scale, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(x, y + size / 2, 15 * scale, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(x, y + size / 2, 5 * scale, 0, Math.PI * 2);
+                    ctx.fillStyle = altColor;
+                    ctx.fill();
+                    break;
+
+                case 'chart':
+                    ctx.strokeStyle = iconColor;
+                    ctx.fillStyle = iconColor;
+                    ctx.fillRect(x - size / 2 + 5 * scale, y + 40 * scale, 10 * scale, 20 * scale);
+                    ctx.fillRect(x - size / 2 + 20 * scale, y + 30 * scale, 10 * scale, 30 * scale);
+                    ctx.fillRect(x - size / 2 + 35 * scale, y + 20 * scale, 10 * scale, 40 * scale);
+                    ctx.fillRect(x - size / 2 + 50 * scale, y + 10 * scale, 10 * scale, 50 * scale);
+                    break;
+
+                case 'team':
+                    ctx.strokeStyle = iconColor;
+                    ctx.fillStyle = altColor;
+                    ctx.strokeRect(x - size / 2, y + 20 * scale, size, 40 * scale);
+                    ctx.fillRect(x - size / 2, y + 20 * scale, size, 40 * scale);
+                    ctx.fillStyle = iconColor;
+                    ctx.beginPath();
+                    ctx.arc(x - size / 2 + 15 * scale, y + 35 * scale, 6 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(x - size / 2 + 45 * scale, y + 35 * scale, 6 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+
+                case 'lightbulb':
+                    ctx.strokeStyle = altColor;
+                    ctx.fillStyle = altColor;
+                    ctx.beginPath();
+                    ctx.arc(x, y + 20 * scale, 15 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = iconColor;
+                    ctx.fillRect(x - 8 * scale, y + 35 * scale, 16 * scale, 20 * scale);
+                    ctx.strokeRect(x - 8 * scale, y + 35 * scale, 16 * scale, 20 * scale);
+                    break;
+
+                case 'rocket':
+                    ctx.strokeStyle = iconColor;
+                    ctx.fillStyle = altColor;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + 15 * scale, y + 40 * scale);
+                    ctx.lineTo(x, y + 30 * scale);
+                    ctx.lineTo(x - 15 * scale, y + 40 * scale);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillRect(x - 10 * scale, y + 25 * scale, 20 * scale, 30 * scale);
+                    ctx.strokeRect(x - 10 * scale, y + 25 * scale, 20 * scale, 30 * scale);
+                    break;
+
+                case 'handshake':
+                    ctx.strokeStyle = iconColor;
+                    ctx.lineWidth = 4 * scale;
+                    ctx.beginPath();
+                    ctx.moveTo(x - size / 2 + 10 * scale, y + 30 * scale);
+                    ctx.lineTo(x - size / 2 + 25 * scale, y + 20 * scale);
+                    ctx.lineTo(x - size / 2 + 35 * scale, y + 20 * scale);
+                    ctx.lineTo(x - size / 2 + 50 * scale, y + 30 * scale);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(x - size / 2 + 10 * scale, y + 30 * scale);
+                    ctx.lineTo(x - size / 2 + 10 * scale, y + 50 * scale);
+                    ctx.moveTo(x - size / 2 + 50 * scale, y + 30 * scale);
+                    ctx.lineTo(x - size / 2 + 50 * scale, y + 50 * scale);
+                    ctx.stroke();
+                    break;
+
+                case 'trophy':
+                    ctx.strokeStyle = altColor;
+                    ctx.fillStyle = altColor;
+                    ctx.beginPath();
+                    ctx.moveTo(x - size / 2 + 10 * scale, y + 10 * scale);
+                    ctx.lineTo(x - size / 2 + 15 * scale, y + 30 * scale);
+                    ctx.lineTo(x - size / 2 + 45 * scale, y + 30 * scale);
+                    ctx.lineTo(x - size / 2 + 50 * scale, y + 10 * scale);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillRect(x - size / 2 + 20 * scale, y + 30 * scale, 20 * scale, 10 * scale);
+                    ctx.fillRect(x - size / 2 + 15 * scale, y + 40 * scale, 30 * scale, 8 * scale);
+                    break;
+
+                case 'gear':
+                    ctx.strokeStyle = altColor;
+                    ctx.lineWidth = 3 * scale;
+                    ctx.beginPath();
+                    ctx.arc(x, y + size / 2, 18 * scale, 0, Math.PI * 2);
+                    ctx.stroke();
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (Math.PI * 2 * i) / 8;
+                        ctx.beginPath();
+                        ctx.moveTo(x + Math.cos(angle) * 15 * scale, y + size / 2 + Math.sin(angle) * 15 * scale);
+                        ctx.lineTo(x + Math.cos(angle) * 25 * scale, y + size / 2 + Math.sin(angle) * 25 * scale);
+                        ctx.stroke();
+                    }
+                    break;
+
+                case 'star':
+                    ctx.fillStyle = altColor;
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+                        const radius = i % 2 === 0 ? 25 * scale : 12 * scale;
+                        const px = x + radius * Math.cos(angle);
+                        const py = y + size / 2 + radius * Math.sin(angle);
+                        if (i === 0) ctx.moveTo(px, py);
+                        else ctx.lineTo(px, py);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+
+                case 'graduation':
+                    ctx.fillStyle = iconColor;
+                    ctx.strokeStyle = iconColor;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y + 10 * scale);
+                    ctx.lineTo(x + size / 2 + 10 * scale, y + 25 * scale);
+                    ctx.lineTo(x, y + 35 * scale);
+                    ctx.lineTo(x - size / 2 - 10 * scale, y + 25 * scale);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillRect(x - 3 * scale, y + 35 * scale, 6 * scale, 20 * scale);
+                    break;
+
+                case 'growth':
+                    ctx.strokeStyle = altColor;
+                    ctx.fillStyle = altColor;
+                    ctx.lineWidth = 3 * scale;
+                    ctx.beginPath();
+                    ctx.moveTo(x - size / 2 + 10 * scale, y + 50 * scale);
+                    ctx.lineTo(x - size / 2 + 20 * scale, y + 40 * scale);
+                    ctx.lineTo(x - size / 2 + 30 * scale, y + 30 * scale);
+                    ctx.lineTo(x - size / 2 + 40 * scale, y + 20 * scale);
+                    ctx.lineTo(x - size / 2 + 50 * scale, y + 10 * scale);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(x - size / 2 + 50 * scale, y + 10 * scale);
+                    ctx.lineTo(x - size / 2 + 40 * scale, y + 10 * scale);
+                    ctx.lineTo(x - size / 2 + 50 * scale, y + 20 * scale);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+
+                case 'clock':
+                    ctx.strokeStyle = iconColor;
+                    ctx.lineWidth = 3 * scale;
+                    ctx.beginPath();
+                    ctx.arc(x, y + size / 2, 22 * scale, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(x, y + size / 2);
+                    ctx.lineTo(x, y + size / 2 - 15 * scale);
+                    ctx.moveTo(x, y + size / 2);
+                    ctx.lineTo(x + 12 * scale, y + size / 2);
+                    ctx.stroke();
+                    break;
+
+                case 'laptop':
+                    ctx.strokeStyle = iconColor;
+                    ctx.fillStyle = altColor;
+                    ctx.fillRect(x - size / 2 + 10 * scale, y + 20 * scale, 40 * scale, 25 * scale);
+                    ctx.strokeRect(x - size / 2 + 10 * scale, y + 20 * scale, 40 * scale, 25 * scale);
+                    ctx.strokeRect(x - size / 2 + 5 * scale, y + 45 * scale, 50 * scale, 5 * scale);
+                    break;
+
+                case 'location':
+                    ctx.strokeStyle = altColor;
+                    ctx.fillStyle = altColor;
+                    ctx.beginPath();
+                    ctx.arc(x, y + 20 * scale, 15 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.moveTo(x, y + 35 * scale);
+                    ctx.lineTo(x - 10 * scale, y + 50 * scale);
+                    ctx.lineTo(x + 10 * scale, y + 50 * scale);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+
+                case 'certificate':
+                    ctx.strokeStyle = iconColor;
+                    ctx.strokeRect(x - size / 2 + 5 * scale, y + 15 * scale, 50 * scale, 40 * scale);
+                    ctx.lineWidth = 2 * scale;
+                    ctx.beginPath();
+                    ctx.moveTo(x - size / 2 + 15 * scale, y + 28 * scale);
+                    ctx.lineTo(x - size / 2 + 45 * scale, y + 28 * scale);
+                    ctx.moveTo(x - size / 2 + 15 * scale, y + 35 * scale);
+                    ctx.lineTo(x - size / 2 + 45 * scale, y + 35 * scale);
+                    ctx.moveTo(x - size / 2 + 15 * scale, y + 42 * scale);
+                    ctx.lineTo(x - size / 2 + 35 * scale, y + 42 * scale);
+                    ctx.stroke();
+                    break;
+            }
+        }
+
+        function downloadImage(format = 'png') {
+            const link = document.createElement('a');
+            link.download = `linkedin-post.${format}`;
+
+            if (format === 'jpg') {
+                // Create white background for JPG
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                const tempCtx = tempCanvas.getContext('2d');
+
+                tempCtx.fillStyle = 'white';
+                tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                tempCtx.drawImage(canvas, 0, 0);
+
+                link.href = tempCanvas.toDataURL('image/jpeg', 0.95);
+            } else {
+                link.href = canvas.toDataURL('image/png');
+            }
+
+            link.click();
+        }
+
+        function downloadPDF() {
+            // Simple PDF generation using canvas data
+            const imgData = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'linkedin-post.png'; // For now, still PNG
+            link.href = imgData;
+            link.click();
+
+            alert('PDF download feature: For full PDF support, please use the PNG/JPG and convert using external tools.');
+        }
+
+        function loadTemplate(templateName) {
+            const templates = {
+                default: {
+                    bgColor: '#4A6B8A',
+                    sidebarColor: '#B8935E',
+                    titleColor: '#B8935E',
+                    textColor: '#FFFFFF',
+                    iconColor: '#FFFFFF',
+                    fontFamily: 'IM Fell English SC'
+                },
+                modern: {
+                    bgColor: '#8B5CF6',
+                    sidebarColor: '#EC4899',
+                    titleColor: '#FCD34D',
+                    textColor: '#FFFFFF',
+                    iconColor: '#FFFFFF',
+                    fontFamily: 'Montserrat'
+                },
+                professional: {
+                    bgColor: '#1E3A8A',
+                    sidebarColor: '#94A3B8',
+                    titleColor: '#E2E8F0',
+                    textColor: '#F8FAFC',
+                    iconColor: '#F8FAFC',
+                    fontFamily: 'Roboto'
+                },
+                creative: {
+                    bgColor: '#14B8A6',
+                    sidebarColor: '#F97316',
+                    titleColor: '#FEF3C7',
+                    textColor: '#FFFFFF',
+                    iconColor: '#FFFFFF',
+                    fontFamily: 'Playfair Display'
+                },
+                minimal: {
+                    bgColor: '#1F2937',
+                    sidebarColor: '#F3F4F6',
+                    titleColor: '#F9FAFB',
+                    textColor: '#E5E7EB',
+                    iconColor: '#E5E7EB',
+                    fontFamily: 'Open Sans'
+                },
+                vibrant: {
+                    bgColor: '#DC2626',
+                    sidebarColor: '#FBBF24',
+                    titleColor: '#FEF3C7',
+                    textColor: '#FFFFFF',
+                    iconColor: '#FFFFFF',
+                    fontFamily: 'Lora'
+                }
+            };
+
+            const template = templates[templateName];
+            if (template) {
+                Object.keys(template).forEach(key => {
+                    if (key === 'fontFamily') {
+                        document.getElementById(key).value = template[key];
+                    } else {
+                        document.getElementById(key).value = template[key];
+                        document.getElementById(key + 'Text').value = template[key];
+                    }
+                });
+
+                document.querySelectorAll('.template-card').forEach(card => card.classList.remove('active'));
+                event.target.closest('.template-card').classList.add('active');
+
+                generateImage();
+            }
+        }
+
+        function saveTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            if (!name) {
+                alert('Please enter a template name');
+                return;
+            }
+
+            const template = {
+                name: name,
+                title: document.getElementById('title').value,
+                mainText: document.getElementById('mainText').value,
+                sideText: document.getElementById('sideText').value,
+                fontFamily: document.getElementById('fontFamily').value,
+                bgColor: document.getElementById('bgColor').value,
+                sidebarColor: document.getElementById('sidebarColor').value,
+                titleColor: document.getElementById('titleColor').value,
+                textColor: document.getElementById('textColor').value,
+                iconColor: document.getElementById('iconColor').value,
+                textAlign: document.getElementById('textAlign').value,
+                textShadow: document.getElementById('textShadow').value,
+                icons: Array.from(document.querySelectorAll('input[name="icon"]:checked')).map(cb => cb.value)
+            };
+
+            let savedTemplates = JSON.parse(localStorage.getItem('linkedinTemplates') || '[]');
+            savedTemplates.push(template);
+            localStorage.setItem('linkedinTemplates', JSON.stringify(savedTemplates));
+
+            document.getElementById('templateName').value = '';
+            loadSavedTemplates();
+            alert('Template saved successfully!');
+        }
+
+        function loadSavedTemplates() {
+            const savedTemplates = JSON.parse(localStorage.getItem('linkedinTemplates') || '[]');
+            const container = document.getElementById('savedTemplatesList');
+
+            if (savedTemplates.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #999; padding: 20px; font-size: 13px;">No saved templates yet</div>';
+                return;
+            }
+
+            container.innerHTML = savedTemplates.map((template, index) => `
+                <div class="saved-template-item">
+                    <span>${template.name}</span>
+                    <div>
+                        <button onclick="applySavedTemplate(${index})" class="btn-secondary" style="padding: 4px 8px; font-size: 11px;">Load</button>
+                        <button onclick="deleteSavedTemplate(${index})" class="btn-tertiary" style="padding: 4px 8px; font-size: 11px; background: #EF4444;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applySavedTemplate(index) {
+            const savedTemplates = JSON.parse(localStorage.getItem('linkedinTemplates') || '[]');
+            const template = savedTemplates[index];
+
+            if (template) {
+                document.getElementById('title').value = template.title;
+                document.getElementById('mainText').value = template.mainText;
+                document.getElementById('sideText').value = template.sideText;
+                document.getElementById('fontFamily').value = template.fontFamily;
+                document.getElementById('bgColor').value = template.bgColor;
+                document.getElementById('bgColorText').value = template.bgColor;
+                document.getElementById('sidebarColor').value = template.sidebarColor;
+                document.getElementById('sidebarColorText').value = template.sidebarColor;
+                document.getElementById('titleColor').value = template.titleColor;
+                document.getElementById('titleColorText').value = template.titleColor;
+                document.getElementById('textColor').value = template.textColor;
+                document.getElementById('textColorText').value = template.textColor;
+                document.getElementById('iconColor').value = template.iconColor;
+                document.getElementById('iconColorText').value = template.iconColor;
+                document.getElementById('textAlign').value = template.textAlign;
+                document.getElementById('textShadow').value = template.textShadow;
+
+                // Clear all icon checkboxes
+                document.querySelectorAll('input[name="icon"]').forEach(cb => cb.checked = false);
+                // Check saved icons
+                template.icons.forEach(iconValue => {
+                    const checkbox = document.querySelector(`input[name="icon"][value="${iconValue}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+
+                generateImage();
+            }
+        }
+
+        function deleteSavedTemplate(index) {
+            if (confirm('Are you sure you want to delete this template?')) {
+                let savedTemplates = JSON.parse(localStorage.getItem('linkedinTemplates') || '[]');
+                savedTemplates.splice(index, 1);
+                localStorage.setItem('linkedinTemplates', JSON.stringify(savedTemplates));
+                loadSavedTemplates();
+            }
+        }
+
+        function clearAll() {
+            if (confirm('Clear all fields and reset to default?')) {
+                document.getElementById('title').value = '';
+                document.getElementById('mainText').value = '';
+                document.getElementById('sideText').value = '';
+                document.querySelectorAll('input[name="icon"]').forEach(cb => cb.checked = false);
+                logoImage = null;
+                bgImage = null;
+                document.getElementById('logoFileName').textContent = '';
+                document.getElementById('bgFileName').textContent = '';
+                loadTemplate('default');
+            }
+        }
+
+        function saveToHistory() {
+            const state = canvas.toDataURL();
+
+            // Remove any redo states
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+
+            history.push(state);
+            historyIndex++;
+
+            // Limit history to 20 states
+            if (history.length > 20) {
+                history.shift();
+                historyIndex--;
+            }
+
+            updateHistoryButtons();
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const img = new Image();
+                img.onload = function () {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = history[historyIndex];
+                updateHistoryButtons();
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                const img = new Image();
+                img.onload = function () {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = history[historyIndex];
+                updateHistoryButtons();
+            }
+        }
+
+        function updateHistoryButtons() {
+            document.getElementById('undoBtn').disabled = historyIndex <= 0;
+            document.getElementById('redoBtn').disabled = historyIndex >= history.length - 1;
+        }
+
+        // Generate initial image on load
+        window.onload = () => {
+            generateImage();
+            loadSavedTemplates();
+        };
+    </script>
+</body>
+
+</html>
